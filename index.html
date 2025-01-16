@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Discord Webhook Form</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+
+    <div class="container">
+        <h1>No Data is ever stored anywhere</h1>
+
+        <!-- Webhook Form -->
+        <form id="webhookForm" onsubmit="handleSubmit(event)">
+            <label for="webhook">Enter your Discord Webhook:</label>
+            <input type="url" id="webhook" name="webhook" placeholder="https://discord.com/api/webhooks/..." required>
+            <button type="submit">Submit</button>
+        </form>
+
+        <!-- Response Message -->
+        <div id="responseMessage" class="hidden"></div>
+
+        <!-- New Content After Webhook Submission -->
+        <div id="tabsContainer" class="hidden">
+            <div class="tabs">
+                <button class="tabButton" onclick="showTab('info')">Info</button>
+                <button class="tabButton" onclick="showTab('delete')">Delete</button>
+                <button class="tabButton" onclick="showTab('spam')">Spam</button>
+                <button class="tabButton" onclick="showTab('edit')">Edit</button>
+            </div>
+            <div id="info" class="tabContent hidden">
+                <h2>Webhook Info</h2>
+                <p>This is where you would display the webhook info.</p>
+            </div>
+            <div id="delete" class="tabContent hidden">
+                <h2>Delete Webhook</h2>
+                <p>Here you can delete the webhook.</p>
+            </div>
+            <div id="spam" class="tabContent hidden">
+                <h2>Spam Webhook</h2>
+                <p>This is where you can spam the webhook.</p>
+            </div>
+            <div id="edit" class="tabContent hidden">
+                <h2>Edit Webhook</h2>
+                <p>Edit the details of the webhook here.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification Box -->
+    <div id="notification" class="hidden">
+        Valid Webhook
+    </div>
+
+    <script>
+        function handleSubmit(event) {
+            event.preventDefault(); // Prevent form from submitting
+
+            const webhookInput = document.getElementById("webhook");
+            const webhookUrl = webhookInput.value;
+
+            // Check if the entered URL is a valid Discord webhook URL
+            const webhookPattern = /^https:\/\/discord\.com\/api\/webhooks\/\d+\/[A-Za-z0-9_-]+$/;
+
+            if (webhookPattern.test(webhookUrl)) {
+                // Hide form and show the new page with tabs
+                document.getElementById("webhookForm").classList.add("hidden");
+                document.getElementById("responseMessage").classList.remove("hidden");
+                document.getElementById("responseMessage").classList.add("success");
+                document.getElementById("responseMessage").textContent = "Webhook URL is valid!";
+
+                document.getElementById("tabsContainer").classList.remove("hidden");
+
+                // Show the notification in the bottom left corner
+                showNotification();
+
+            } else {
+                // Display an error message
+                document.getElementById("responseMessage").classList.remove("hidden");
+                document.getElementById("responseMessage").classList.add("error");
+                document.getElementById("responseMessage").textContent = "Invalid Webhook URL. Please check the format.";
+            }
+
+            // Clear the input after submission
+            webhookInput.value = '';
+        }
+
+        // Function to show the selected tab
+        function showTab(tabName) {
+            // Hide all tabs
+            const tabContents = document.querySelectorAll('.tabContent');
+            tabContents.forEach(tab => tab.classList.add('hidden'));
+
+            // Show the selected tab
+            const selectedTab = document.getElementById(tabName);
+            selectedTab.classList.remove('hidden');
+        }
+
+        // Function to show notification in the bottom left corner
+        function showNotification() {
+            const notification = document.getElementById("notification");
+            notification.classList.remove("hidden");
+
+            // Hide the notification after 3 seconds
+            setTimeout(() => {
+                notification.classList.add("hidden");
+            }, 3000);
+        }
+    </script>
+
+</body>
+
+</html>
